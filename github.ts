@@ -46,6 +46,9 @@ function formatGitHubEvents(token, username) {
       set.push(pullRequest['html_url']);
     }
   }
+  if (content === '') {
+    content = ':octocat: PR はありません。';
+  }
   return content;
 }
 
