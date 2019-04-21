@@ -28,14 +28,14 @@ function formatAllEvents(events) {
 
 function postSlack(body) {
   var payload = JSON.stringify({'text' : body});
-  
-  var options =
+
+  var options : GoogleAppsScript.URL_Fetch.URLFetchRequestOptions =
       {
         'method' : 'post',
         'contentType' : 'application/json',
         'payload' : payload
       };
-  
+
   UrlFetchApp.fetch(webhookUrl, options);
 }
 
@@ -57,19 +57,19 @@ function getEventsInToday(calendarIds, offset) {
   to.setHours(23);
   to.setMinutes(59);
   to.setSeconds(59);
-  
+
   var allEvents = [];
-  
-  for (var i = 0; i < calendarIds.length; i++) {    
+
+  for (var i = 0; i < calendarIds.length; i++) {
     var calendar = CalendarApp.getCalendarById(calendarIds[i]);
     var events = calendar.getEvents(from, to);
     allEvents = allEvents.concat(events);
   }
-  
+
   allEvents.sort(function(a, b) {
     return a.getStartTime().getTime() - b.getStartTime().getTime();
   });
-  
+
   return allEvents;
 }
 
