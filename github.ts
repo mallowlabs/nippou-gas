@@ -4,50 +4,54 @@ const username = PropertiesService.getScriptProperties().getProperty('GITHUB_USE
 const webhookUrl = PropertiesService.getScriptProperties().getProperty('SLACK_WEBHOOK_URL');
 
 function mainGithub() {
-  const body = formatGitHubEvents(token, username);
+  let body = formatGitHubEvents(token, username);
+  if (body === '') {
+    body = ':octocat: PR はありません。';
+  }
   postSlack(body);
 }
 
 function formatGitHubEvents(token, username) {
-  const options : GoogleAppsScript.URL_Fetch.URLFetchRequestOptions = {
-     'method' : 'get',
-     "headers" : { 'Authorization': 'token ' + token }
-  };
-  const requestUrl = 'https://api.github.com/users/' + username + '/events';
-  const response = UrlFetchApp.fetch(requestUrl, options);
-
-  const events = JSON.parse(response.getContentText());
-
   const today = new Date();
   today.setHours(0);
   today.setMinutes(0);
   today.setSeconds(0);
 
+  const options : GoogleAppsScript.URL_Fetch.URLFetchRequestOptions = {
+    'method' : 'get',
+    "headers" : { 'Authorization': 'token ' + token }
+  };
+
   const set = [];
 
   let content = '';
-  for (let i = 0; i < events.length; i++) {
-    const event = events[i];
 
-    const createdAt = new Date(event['created_at']);
+  for (let page = 1; page < 10; page++) {
+    const requestUrl = `https://api.github.com/users/${username}/events?page=${page}`;
+    const response = UrlFetchApp.fetch(requestUrl, options);
 
-    if (createdAt.getTime() < today.getTime()) {
-      break;
-    }
+    const events = JSON.parse(response.getContentText());
 
-    const pullRequest = event['payload']['pull_request'];
-    if (!!pullRequest && set.indexOf(pullRequest['html_url']) < 0) {
-      content += '* :octocat: [' + pullRequest['title'] + '](' + pullRequest['html_url']
-                 + ') by @[' + pullRequest['user']['login'] + '](' + pullRequest['user']['html_url'] + ')';
-      if (!!pullRequest['merged_at']) {
-        content += " **merged!**";
+    for (let i = 0; i < events.length; i++) {
+      const event = events[i];
+
+      const createdAt = new Date(event['created_at']);
+
+      if (createdAt.getTime() < today.getTime()) {
+        return content;
       }
-      content += "\n";
-      set.push(pullRequest['html_url']);
+
+      const pullRequest = event['payload']['pull_request'];
+      if (!!pullRequest && set.indexOf(pullRequest['html_url']) < 0) {
+        content += '* :octocat: [' + pullRequest['title'] + '](' + pullRequest['html_url']
+                   + ') by @[' + pullRequest['user']['login'] + '](' + pullRequest['user']['html_url'] + ')';
+        if (!!pullRequest['merged_at']) {
+          content += " **merged!**";
+        }
+        content += "\n";
+        set.push(pullRequest['html_url']);
+      }
     }
-  }
-  if (content === '') {
-    content = ':octocat: PR はありません。';
   }
   return content;
 }
