@@ -11,7 +11,7 @@ function mainEsa(): void {
 
     let contents = '';
     for(let team of esaTeams) {
-        const posts = fetchEsa(team);
+        const posts = fetchEsa_(team);
         for(let post of posts) {
             if (new Date(post.created_at) < today) {
                 break;
@@ -22,10 +22,10 @@ function mainEsa(): void {
     if (contents === '') {
         contents = ':esa: 作成した記事はありません。'
     }
-    postSlack(contents);
+    postSlack_(contents);
 }
 
-function fetchEsa(team: string): any[] {
+function fetchEsa_(team: string): any[] {
     const options : GoogleAppsScript.URL_Fetch.URLFetchRequestOptions =
     {
         'method' : 'get',
@@ -36,7 +36,7 @@ function fetchEsa(team: string): any[] {
     return JSON.parse(response.getContentText()).posts;
 }
 
-function postSlack(body: string): void {
+function postSlack_(body: string): void {
     const payload = JSON.stringify({'text' : body});
 
     const options : GoogleAppsScript.URL_Fetch.URLFetchRequestOptions =

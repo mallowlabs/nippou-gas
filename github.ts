@@ -4,14 +4,14 @@ const username = PropertiesService.getScriptProperties().getProperty('GITHUB_USE
 const webhookUrl = PropertiesService.getScriptProperties().getProperty('SLACK_WEBHOOK_URL');
 
 function mainGithub() {
-  let body = formatGitHubEvents(token, username);
+  let body = formatGitHubEvents_(token, username);
   if (body === '') {
     body = ':octocat: PR はありません。';
   }
-  postSlack(body);
+  postSlack_(body);
 }
 
-function formatGitHubEvents(token, username) {
+function formatGitHubEvents_(token, username) {
   const today = new Date();
   today.setHours(0);
   today.setMinutes(0);
@@ -56,7 +56,7 @@ function formatGitHubEvents(token, username) {
   return content;
 }
 
-function postSlack(body) {
+function postSlack_(body) {
   const payload = JSON.stringify({'text' : body});
 
   const options : GoogleAppsScript.URL_Fetch.URLFetchRequestOptions =

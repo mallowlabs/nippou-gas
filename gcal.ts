@@ -2,23 +2,23 @@ const calendarIds = PropertiesService.getScriptProperties().getProperty('CALENDA
 const webhookUrl = PropertiesService.getScriptProperties().getProperty('SLACK_WEBHOOK_URL');
 
 function mainGcal() {
-  if (isHoliday()) {
+  if (isHoliday_()) {
     return;
   }
-  postEventsToSlack(0);
-  postEventsToSlack(1);
+  postEventsToSlack_(0);
+  postEventsToSlack_(1);
 }
 
-function postEventsToSlack(offset) {
-  const events = getEventsInToday(calendarIds, offset);
-  const body = formatAllEvents(events);
-  postSlack(body);
+function postEventsToSlack_(offset) {
+  const events = getEventsInToday_(calendarIds, offset);
+  const body = formatAllEvents_(events);
+  postSlack_(body);
 }
 
-function formatAllEvents(events) {
+function formatAllEvents_(events) {
   let body = '';
   for (let i = 0; i < events.length; i++) {
-    body += formatEvent(events[i]) + "\n";
+    body += formatEvent_(events[i]) + "\n";
   }
   if (body === '') {
     body = '予定はありません';
@@ -26,7 +26,7 @@ function formatAllEvents(events) {
   return body;
 }
 
-function postSlack(body) {
+function postSlack_(body) {
   const payload = JSON.stringify({'text' : body});
 
   const options : GoogleAppsScript.URL_Fetch.URLFetchRequestOptions =
@@ -39,13 +39,13 @@ function postSlack(body) {
   UrlFetchApp.fetch(webhookUrl, options);
 }
 
-function formatEvent(event) {
+function formatEvent_(event) {
   const from = Utilities.formatDate(event.getStartTime(), 'Asia/Tokyo', 'HH:mm');
   const to   = Utilities.formatDate(event.getEndTime(), 'Asia/Tokyo', 'HH:mm');
   return '* ' + from + '-' + to + ' ' + event.getTitle();
 }
 
-function getEventsInToday(calendarIds, offset) {
+function getEventsInToday_(calendarIds, offset) {
   const from = new Date();
   from.setDate(from.getDate() + offset);
   from.setHours(0);
@@ -73,7 +73,7 @@ function getEventsInToday(calendarIds, offset) {
   return allEvents;
 }
 
-function isHoliday() {
+function isHoliday_() {
   const today = new Date();
 
   const weekInt = today.getDay();
