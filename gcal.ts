@@ -2,11 +2,11 @@ const calendarIds = PropertiesService.getScriptProperties().getProperty('CALENDA
 const webhookUrl = PropertiesService.getScriptProperties().getProperty('SLACK_WEBHOOK_URL');
 
 function mainGcal() {
-  if (isHoliday_()) {
+  if (isHoliday_(new Date())) {
     return;
   }
   postEventsToSlack_(0);
-  postEventsToSlack_(1);
+  postEventsToSlack_(getNextWeekday_());
 }
 
 function postEventsToSlack_(offset) {
@@ -73,16 +73,25 @@ function getEventsInToday_(calendarIds, offset) {
   return allEvents;
 }
 
-function isHoliday_() {
-  const today = new Date();
-
-  const weekInt = today.getDay();
+function isHoliday_(day: Date): Boolean {
+  const weekInt = day.getDay();
   if (weekInt <= 0 || 6 <= weekInt) {
     return true;
   }
 
   const calendarId = "ja.japanese#holiday@group.v.calendar.google.com";
   const calendar = CalendarApp.getCalendarById(calendarId);
-  const todayEvents = calendar.getEventsForDay(today);
+  const todayEvents = calendar.getEventsForDay(day);
   return (todayEvents.length > 0);
+}
+
+function getNextWeekday_(): Number {
+  for (let i = 1; i < 30; i++) {
+    const d = new Date();
+    d.setDate(d.getDate() + i);
+    if (!isHoliday_(d)) {
+      return i;
+    }
+  }
+  return 30;
 }
