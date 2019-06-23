@@ -67,6 +67,6 @@ function postSlack_(body) {
         'payload' : payload
       };
 
-  UrlFetchApp.fetch(webhookUrl, options);
+  UrlFetchApp.fetch(webhookUrl(), options);
 }
 

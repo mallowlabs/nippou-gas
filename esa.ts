@@ -47,5 +47,5 @@ function postSlack_(body: string): void {
         'payload' : payload
     };
 
-    UrlFetchApp.fetch(webhookUrl, options);
+    UrlFetchApp.fetch(webhookUrl(), options);
 }

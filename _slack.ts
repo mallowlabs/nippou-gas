@@ -1,1 +1,1 @@
-export const webhookUrl = PropertiesService.getScriptProperties().getProperty('SLACK_WEBHOOK_URL');
+export function webhookUrl() { return PropertiesService.getScriptProperties().getProperty('SLACK_WEBHOOK_URL'); }
