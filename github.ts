@@ -1,7 +1,8 @@
+import { webhookUrl } from './_slack';
+
 // https://github.com/settings/tokens
 const token = PropertiesService.getScriptProperties().getProperty('GITHUB_TOKEN');
 const username = PropertiesService.getScriptProperties().getProperty('GITHUB_USERNAME');
-const webhookUrl = PropertiesService.getScriptProperties().getProperty('SLACK_WEBHOOK_URL');
 
 function mainGithub() {
   let body = formatGitHubEvents_(token, username);

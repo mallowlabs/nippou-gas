@@ -1,7 +1,8 @@
+import { webhookUrl } from './_slack'
+
 const esaTeams = PropertiesService.getScriptProperties().getProperty('ESA_TEAMS').split(',');
 const esaToken = PropertiesService.getScriptProperties().getProperty('ESA_TOKEN');
 const esaUser = PropertiesService.getScriptProperties().getProperty('ESA_USER');
-const webhookUrl = PropertiesService.getScriptProperties().getProperty('SLACK_WEBHOOK_URL');
 
 function mainEsa(): void {
     const today = new Date();

@@ -1,5 +1,6 @@
+import { webhookUrl } from './_slack';
+
 const calendarIds = PropertiesService.getScriptProperties().getProperty('CALENDAR_IDS').split(',');
-const webhookUrl = PropertiesService.getScriptProperties().getProperty('SLACK_WEBHOOK_URL');
 
 function mainGcal() {
   if (isHoliday_(new Date())) {
