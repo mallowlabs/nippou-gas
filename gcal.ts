@@ -59,13 +59,15 @@ function getEventsInToday_(calendarIds, offset) {
   to.setMinutes(59);
   to.setSeconds(59);
 
-  let allEvents = [];
+  let allEvents: GoogleAppsScript.Calendar.CalendarEvent[] = [];
 
   for (let i = 0; i < calendarIds.length; i++) {
     const calendar = CalendarApp.getCalendarById(calendarIds[i]);
     const events = calendar.getEvents(from, to);
     allEvents = allEvents.concat(events);
   }
+
+  allEvents = allEvents.filter(event => event.getMyStatus() !== GoogleAppsScript.Calendar.GuestStatus.NO);
 
   allEvents.sort(function(a, b) {
     return a.getStartTime().getTime() - b.getStartTime().getTime();
