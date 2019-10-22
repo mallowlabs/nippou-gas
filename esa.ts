@@ -17,7 +17,7 @@ function mainEsa(): void {
             if (new Date(post.created_at) < today) {
                 break;
             }
-            contents += `* :esa: [${post.name}](${post.url})\n`;
+            contents += `* :esa: [${post.full_name}](${post.url})\n`;
         }
     }
     if (contents === '') {
