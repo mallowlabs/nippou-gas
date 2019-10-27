@@ -67,7 +67,7 @@ function getEventsInToday_(calendarIds, offset) {
     allEvents = allEvents.concat(events);
   }
 
-  allEvents = allEvents.filter(event => event.getMyStatus() !== GoogleAppsScript.Calendar.GuestStatus.NO);
+  allEvents = allEvents.filter(event => event.getMyStatus() !== CalendarApp.GuestStatus.NO);
 
   allEvents.sort(function(a, b) {
     return a.getStartTime().getTime() - b.getStartTime().getTime();
