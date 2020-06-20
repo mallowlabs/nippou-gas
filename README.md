@@ -25,6 +25,7 @@ Access to the web editor.
 Set script properties.
 
 * CALENDAR_IDS (comma separated values)
+* CALENDAR_IGNORED_WORDS (comma separated values)
 * ESA_TOKEN
 * ESA_USER
 * ESA_TEAMS (comma separated values)

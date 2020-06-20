@@ -1,6 +1,7 @@
 import { webhookUrl } from './_slack';
 
 const calendarIds = PropertiesService.getScriptProperties().getProperty('CALENDAR_IDS').split(',');
+const ignoredWords = (PropertiesService.getScriptProperties().getProperty('CALENDAR_IGNORED_WORDS') || '').split(',');
 
 function mainGcal() {
   if (isHoliday_(new Date())) {
@@ -68,6 +69,7 @@ function getEventsInToday_(calendarIds, offset) {
   }
 
   allEvents = allEvents.filter(event => event.getMyStatus() !== CalendarApp.GuestStatus.NO);
+  allEvents = allEvents.filter(event => ignoredWords.indexOf(event.getTitle()) === -1);
 
   allEvents.sort(function(a, b) {
     return a.getStartTime().getTime() - b.getStartTime().getTime();
